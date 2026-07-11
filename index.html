@@ -3,54 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <title>Neuquén WebAR - Demo Comedor</title>
-    <!-- Mantenemos la librería core estable -->
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <title>Neuquén WebAR - Demo Comedor Definitiva</title>
     
-    <script>
-        // Forzamos al sistema a limpiar el lienzo si el modo AR falla al arrancar
-        window.addEventListener('DOMContentLoaded', () => {
-            const scene = document.querySelector('a-scene');
-            scene.addEventListener('loaded', () => {
-                console.log("Escena A-Frame indexada correctamente.");
-            });
-            scene.addEventListener('enter-vr', () => {
-                if (scene.is('ar-mode')) {
-                    document.body.style.backgroundColor = 'transparent';
-                }
-            });
-        });
-    </script>
+    <!-- Librerías estables de código abierto (A-Frame + AR.js) -->
+    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
 <body style="margin: 0px; overflow: hidden; background-color: #000;">
 
-    <!-- Eliminamos las directivas duplicadas de AR.js para evitar el conflicto que congela la pantalla -->
-    <a-scene webxr="requiredFeatures: hit-test, local-floor; optionalFeatures: dom-overlay; overlayElement: #ar-ui;" vr-mode-ui="enabled: true">
+    <!-- Forzamos el uso de la webcam y el renderizado limpio del video texture -->
+    <a-scene 
+        embedded 
+        arjs="sourceType: webcam; sourceWidth:1280; sourceHeight:960; displayWidth: 1280; displayHeight: 960; debugUIEnabled: false;" 
+        vr-mode-ui="enabled: false">
         
         <a-assets>
             <!-- Tu archivo de dinosaurio .glb -->
             <a-asset-item id="dinosaurio" src="dino.glb"></a-asset-item>
         </a-assets>
 
-        <!-- Contenedor del modelo: colocado a 2 metros adelante y 1.2 metros abajo (promedio del piso desde tus ojos) -->
-        <a-entity id="anchor-dino" position="0 -1.2 -2">
+        <!-- Marcador HIRO para la prueba de laboratorio en tu comedor -->
+        <!-- Cuando enfoques este marcador impreso o en otra pantalla, el dino se clavará ahí -->
+        <a-marker preset="hiro">
+            
+            <!-- Posición 0 0 0 lo apoya directo en el papel (piso) -->
+            <!-- scale="0.1 0.1 0.1" lo achica para que entre en tu sala -->
             <a-entity 
                 gltf-model="#dinosaurio" 
-                scale="0.15 0.15 0.15"
-                rotation="0 180 0">
+                position="0 0 0" 
+                scale="0.1 0.1 0.1"
+                rotation="0 0 0">
             </a-entity>
-        </a-entity>
+            
+        </a-marker>
 
-        <!-- Cámara nativa con controles de orientación activados -->
-        <a-entity camera look-controls></a-entity>
+        <!-- Cámara estricta de AR.js -->
+        <a-entity camera></a-entity>
         
     </a-scene>
-
-    <!-- Capa de interfaz de usuario básica obligatoria para navegadores modernos -->
-    <div id="ar-ui" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999; display: none;">
-        <p style="color: white; font-family: sans-serif; background: rgba(0,0,0,0.6); padding: 8px 15px; border-radius: 20px; font-size: 14px;">
-            Mové el celular despacio para detectar el piso
-        </p>
-    </div>
 </body>
 </html>
