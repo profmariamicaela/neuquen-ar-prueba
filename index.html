@@ -2,71 +2,27 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piloto RA - Neuquén</title>
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Diagnostico RA - Neuquén</title>
+    <!-- Cargamos librerías estables y livianas desde servidores alternativos -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-<style>
-        /* Quitamos márgenes molestos del navegador */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background-color: transparent;
-        }
-
-        /* Forzamos a la cámara web a ocupar toda la pantalla sin distorsión */
-        video {
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover !important;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1; /* Queda al fondo */
-        }
-
-        /* Hacemos transparente la placa blanca (el lienzo de A-Frame) */
-        .a-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100% !important;
-            height: 100% !important;
-            z-index: 2; /* Queda adelante de la cámara */
-            background-color: transparent !important;
-        }
-    </style>
 </head>
-
 <body style="margin: 0px; overflow: hidden;">
 
-<a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
+    <!-- Inicialización forzada limpia para navegadores móviles modernos -->
+    <a-scene embedded arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false;">
         
-        <a-assets>
-            <!-- Cargamos el marcador de Polycam (tu sillón) y el mono -->
-            <a-asset-item id="sillon-ref" src="models/sillon.glb"></a-asset-item>
-            <a-asset-item id="mono" src="models/mono.glb"></a-asset-item>
-        </a-assets>
-
-        <!-- Cuando la cámara detecte el marcador impreso -->
+        <!-- Probamos con el marcador básico para verificar que el motor funciona -->
         <a-marker type="pattern" url="markers/pattern-marker.patt">
             
-            <!-- IMPORTANTE: El sillón digital lo dejamos invisible (visible="false"). 
-                 Solo nos sirve en el software para calcular la posición real. -->
-            <a-entity gltf-model="#sillon-ref" position="0 0 0" scale="1 1 1" visible="false"></a-entity>
-            
-            <!-- EL MONO: Modificá 'position' para sentarlo en el sillón digital.
-                 Ejemplo: position="X Y Z" (X: izquierda/derecha, Y: altura, Z: adelante/atrás) -->
-            <a-entity gltf-model="#mono" position="0 0.3 -0.5" scale="1 1 1" rotation="0 0 0"></a-entity>
+            <!-- Reemplazamos temporalmente los .GLB por un cubo nativo que no consume datos -->
+            <a-box position="0 0.5 0" material="color: red;" scale="0.5 0.5 0.5"></a-box>
             
         </a-marker>
 
         <a-entity camera></a-entity>
         
     </a-scene>
-
 </body>
 </html>
