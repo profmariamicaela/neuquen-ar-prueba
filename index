@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Neuquén WebAR - Demo Comedor Real</title>
+    <!-- Cargamos la última versión estable de A-Frame que soporta WebXR nativo -->
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+</head>
+<body style="margin: 0px; overflow: hidden;">
+
+    <!-- Inicializamos la escena usando la API nativa del navegador para RA (WebXR) -->
+    <!-- Quitamos por completo AR.js y el GPS para esta prueba de interiores -->
+    <a-scene webxr="optionalFeatures: hit-test, local-floor;" arjs="sourceType: webcam; debugUIEnabled: false;">
+        
+        <a-assets>
+            <!-- Tu archivo de dinosaurio .glb -->
+            <a-asset-item id="dinosaurio" src="dino.glb"></a-asset-item>
+        </a-assets>
+
+        <!-- Anclaje espacial autónomo -->
+        <!-- Posicionamos al dinosaurio 2 metros adelante (Z = -2) y apoyado en el piso (Y = 0) -->
+        <a-entity id="contenedor-dino" position="0 0 -2">
+            <a-entity 
+                gltf-model="#dinosaurio" 
+                scale="0.2 0.2 0.2"
+                rotation="0 45 0">
+            </a-entity>
+        </a-entity>
+
+        <!-- La cámara se desvincula del objeto. El usuario puede caminar alrededor -->
+        <a-entity camera look-controls></a-entity>
+        
+    </a-scene>
+</body>
+</html>
