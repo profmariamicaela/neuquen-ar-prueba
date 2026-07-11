@@ -3,32 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Neuquén WebAR - Demo Comedor Real</title>
-    <!-- Cargamos la última versión estable de A-Frame que soporta WebXR nativo -->
+    <title>Neuquén WebAR - Demo Comedor Definitiva</title>
+    <!-- Mantenemos la librería core de A-Frame -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-</head>
-<body style="margin: 0px; overflow: hidden;">
 
-    <!-- Inicializamos la escena usando la API nativa del navegador para RA (WebXR) -->
-    <!-- Quitamos por completo AR.js y el GPS para esta prueba de interiores -->
-    <a-scene webxr="optionalFeatures: hit-test, local-floor;" arjs="sourceType: webcam; debugUIEnabled: false;">
+    <!-- Componente de ingeniería para asegurar el anclaje y limpiar errores de visualización -->
+    <script>
+        AFRAME.registerComponent('validador-ar', {
+            init: function () {
+                this.el.addEventListener('enter-vr', () => {
+                    if (this.el.is('ar-mode')) {
+                        console.log("Ingreso exitoso a Realidad Aumentada Real");
+                        // Forzamos al fondo a ser transparente para ver tu comedor
+                        document.body.style.backgroundColor = 'transparent';
+                    }
+                });
+            }
+        });
+    </script>
+</head>
+<body style="margin: 0px; overflow: hidden; background-color: #000;">
+
+    <!-- Inicialización con características de tracking e interactividad nativas fijadas -->
+    <a-scene 
+        webxr="requiredFeatures: hit-test, local-floor; optionalFeatures: dom-overlay;" 
+        vr-mode-ui="enabled: false"
+        validador-ar
+        arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false;">
         
         <a-assets>
-            <!-- Tu archivo de dinosaurio .glb -->
+            <!-- Tu archivo de dinosaurio .glb optimizado -->
             <a-asset-item id="dinosaurio" src="dino.glb"></a-asset-item>
         </a-assets>
 
-        <!-- Anclaje espacial autónomo -->
-        <!-- Posicionamos al dinosaurio 2 metros adelante (Z = -2) y apoyado en el piso (Y = 0) -->
-        <a-entity id="contenedor-dino" position="0 0 -2">
+        <!-- PUNTO DE EMPLAZAMIENTO: Lo colocamos a 2.5 metros de distancia (Z = -2.5) -->
+        <!-- Y fijamos su base a nivel 0 (Y = 0) para que descanse sobre las baldosas de tu comedor -->
+        <a-entity id="posicion-dino" position="0 0 -2.5">
             <a-entity 
                 gltf-model="#dinosaurio" 
-                scale="0.2 0.2 0.2"
-                rotation="0 45 0">
+                scale="0.15 0.15 0.15"
+                rotation="0 180 0">
             </a-entity>
         </a-entity>
 
-        <!-- La cámara se desvincula del objeto. El usuario puede caminar alrededor -->
+        <!-- Sistema de cámara desvinculado para permitirte caminar alrededor del objeto real -->
         <a-entity camera look-controls></a-entity>
         
     </a-scene>
