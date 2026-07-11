@@ -7,15 +7,17 @@
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 <style>
-        /* Forzamos al elemento de video de la cámara a centrarse y no hacer zoom */
-        .a-canvas {
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100% !important;
-            height: 100% !important;
+        /* Quitamos márgenes molestos del navegador */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: transparent;
         }
+
+        /* Forzamos a la cámara web a ocupar toda la pantalla sin distorsión */
         video {
             width: 100% !important;
             height: 100% !important;
@@ -23,6 +25,18 @@
             position: absolute;
             top: 0;
             left: 0;
+            z-index: 1; /* Queda al fondo */
+        }
+
+        /* Hacemos transparente la placa blanca (el lienzo de A-Frame) */
+        .a-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100% !important;
+            height: 100% !important;
+            z-index: 2; /* Queda adelante de la cámara */
+            background-color: transparent !important;
         }
     </style>
 </head>
