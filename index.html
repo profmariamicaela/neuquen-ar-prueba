@@ -2,43 +2,38 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Neuquén WebAR - Demo Comedor Definitiva</title>
-    <!-- Mantenemos la librería core de A-Frame -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Neuquén WebAR - Demo Comedor</title>
+    <!-- Mantenemos la librería core estable -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-
-    <!-- Componente de ingeniería para asegurar el anclaje y limpiar errores de visualización -->
+    
     <script>
-        AFRAME.registerComponent('validador-ar', {
-            init: function () {
-                this.el.addEventListener('enter-vr', () => {
-                    if (this.el.is('ar-mode')) {
-                        console.log("Ingreso exitoso a Realidad Aumentada Real");
-                        // Forzamos al fondo a ser transparente para ver tu comedor
-                        document.body.style.backgroundColor = 'transparent';
-                    }
-                });
-            }
+        // Forzamos al sistema a limpiar el lienzo si el modo AR falla al arrancar
+        window.addEventListener('DOMContentLoaded', () => {
+            const scene = document.querySelector('a-scene');
+            scene.addEventListener('loaded', () => {
+                console.log("Escena A-Frame indexada correctamente.");
+            });
+            scene.addEventListener('enter-vr', () => {
+                if (scene.is('ar-mode')) {
+                    document.body.style.backgroundColor = 'transparent';
+                }
+            });
         });
     </script>
 </head>
 <body style="margin: 0px; overflow: hidden; background-color: #000;">
 
-    <!-- Inicialización con características de tracking e interactividad nativas fijadas -->
-    <a-scene 
-        webxr="requiredFeatures: hit-test, local-floor; optionalFeatures: dom-overlay;" 
-        vr-mode-ui="enabled: false"
-        validador-ar
-        arjs="sourceType: webcam; videoTexture: true; debugUIEnabled: false;">
+    <!-- Eliminamos las directivas duplicadas de AR.js para evitar el conflicto que congela la pantalla -->
+    <a-scene webxr="requiredFeatures: hit-test, local-floor; optionalFeatures: dom-overlay; overlayElement: #ar-ui;" vr-mode-ui="enabled: true">
         
         <a-assets>
-            <!-- Tu archivo de dinosaurio .glb optimizado -->
+            <!-- Tu archivo de dinosaurio .glb -->
             <a-asset-item id="dinosaurio" src="dino.glb"></a-asset-item>
         </a-assets>
 
-        <!-- PUNTO DE EMPLAZAMIENTO: Lo colocamos a 2.5 metros de distancia (Z = -2.5) -->
-        <!-- Y fijamos su base a nivel 0 (Y = 0) para que descanse sobre las baldosas de tu comedor -->
-        <a-entity id="posicion-dino" position="0 0 -2.5">
+        <!-- Contenedor del modelo: colocado a 2 metros adelante y 1.2 metros abajo (promedio del piso desde tus ojos) -->
+        <a-entity id="anchor-dino" position="0 -1.2 -2">
             <a-entity 
                 gltf-model="#dinosaurio" 
                 scale="0.15 0.15 0.15"
@@ -46,9 +41,16 @@
             </a-entity>
         </a-entity>
 
-        <!-- Sistema de cámara desvinculado para permitirte caminar alrededor del objeto real -->
+        <!-- Cámara nativa con controles de orientación activados -->
         <a-entity camera look-controls></a-entity>
         
     </a-scene>
+
+    <!-- Capa de interfaz de usuario básica obligatoria para navegadores modernos -->
+    <div id="ar-ui" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 999; display: none;">
+        <p style="color: white; font-family: sans-serif; background: rgba(0,0,0,0.6); padding: 8px 15px; border-radius: 20px; font-size: 14px;">
+            Mové el celular despacio para detectar el piso
+        </p>
+    </div>
 </body>
 </html>
